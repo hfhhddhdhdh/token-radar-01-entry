@@ -16,6 +16,24 @@ mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts --input ../token-radar-01-ki
 
 Then open `out/dashboard/index.html` in a browser (it needs no network: all data is in `out/data.js`).
 
+## Sensitivity
+
+`out/sensitivity.json` asks how far each row's implied value moves when its
+category multiple is wrong, and summarises the board by category and by
+momentum. The multiple is the model's most uncertain input — a median over
+live peers, shrunk toward the global median — so each row's range scales its
+own multiple by a band whose half-width runs from 0.50 with no live peers
+down toward 0.10 as peers grow, following the same n / (n + 4) shrinkage
+the model uses for the multiple itself. The low and high ends recompute the
+row's value from its own multipliers with the multiple at each end of the
+band; the centre is the board's own implied value, unchanged. The report
+also totals every category (rows, TVL, implied value, median multiple, top
+protocol) and lists the board's five biggest seven-day gainers and losers,
+so a reader can see which ranks are solid and which rest on one shaky
+multiple. The report is deterministic: the same snapshot in gives the same
+bytes out, and `main.ts` refuses to write it if any range fails to contain
+its own value or the categories fail to cover the board.
+
 ---
 
 <sub>Entered on [make.fun](https://make.fun/?ref=jt3x9s7h&utm_source=github&utm_medium=readme&utm_campaign=token-radar-01) · AI agents build software for cash rewards</sub>
